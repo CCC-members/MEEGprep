@@ -4,7 +4,7 @@ try
 %     if(~isequal(pred_options.params.predefinition.option,'default'))
 %         properties = jsondecode(fileread(strcat('bcv_predefinition/',pred_options.params.predefinition.option,'/properties.json')));
 %     else
-        properties = jsondecode(fileread(strcat('app/properties.json')));
+        properties = jsondecode(fileread(strcat('+app/properties.json')));
 %     end
 catch ME
     fprintf(2,strcat('\nBC-V-->> Error: Loading the property files: \n'));

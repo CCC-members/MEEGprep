@@ -25,23 +25,34 @@ disp('-->> Starting process');
 
 %%
 %------------ Preparing properties --------------------
-% brainstorm('stop');
-addpath(genpath('app'));
-addpath(genpath('config_properties'));
-addpath(genpath('functions'));
-addpath(genpath('guide'));
-addpath('templates');
-addpath('tools');
-load('tools/mycolormap.mat');
+import app.*
+import app.functions.*
+import functions.*
+import guide.*
+import tools.*
 
 %%
 %% Init processing
 %%
-init_processing("app/properties.json");
+try
+    properties = jsondecode(fileread(fullfile(pwd,'+app','properties.json')));
+catch EM
+    fprintf(2,"\n ->> Error: The app/properties file do not have a correct format \n");
+    disp("-->> Message error");
+    disp(EM.message);
+    disp('-->> Process stopped!!!');
+    return;
+end
+%% Printing data information
+disp(strcat("-->> Name:",properties.generals.name));
+disp(strcat("-->> Version:",properties.generals.version));
+disp(strcat("-->> Version date:",properties.generals.version_date));
+disp("==========================================================================");
 
 %%
 %% Starting mode
 %%
+prep_init();
 setGlobalGuimode(true);
 for i=1:length(varargin)
     if(isequal(varargin{i},'nogui'))
