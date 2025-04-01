@@ -1,4 +1,9 @@
 function  prep_init()
+import app.*
+import app.functions.*
+import functions.*
+import guide.*
+import tools.*
 homedir = char(java.lang.System.getProperty('user.home'));
 MEEGprepDir  = fullfile(homedir,".MEEGprep");
 if(~isfolder(MEEGprepDir))
