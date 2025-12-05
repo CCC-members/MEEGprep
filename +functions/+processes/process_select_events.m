@@ -27,10 +27,21 @@ for e=1:length(EEGs)
             end
             try
                 times  = [regions.start; regions.end]';
-                newEEG = pop_select(EEG, 'point', times);
-                newEEG.task = filter;
-                OutEEGs(count) = eeg_checkset(newEEG);
-                count = count + 1;
+                if(properties.event_params.continue)                    
+                    newEEG = pop_select(EEG, 'time', times);
+                    newEEG.task = filter;
+                    OutEEGs(count) = eeg_checkset(newEEG);
+                    count = count + 1;
+                else
+                    for j=1:size(times,1)
+                        time = times(j,:);
+                        newEEG = pop_select(EEG, 'time', time);
+                        newEEG.segment = num2str(j);
+                        newEEG.task = filter;
+                        OutEEGs(count) = eeg_checkset(newEEG);
+                        count = count + 1;
+                    end
+                end
             catch Ex
                 disp('--------------------------------------------------------------------------');
                 disp("-->> ERROR");

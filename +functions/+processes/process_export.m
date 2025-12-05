@@ -13,7 +13,8 @@ if(~isfolder(subject_path))
     mkdir(subject_path);
 end
 for i=1:length(EEGs)
-    EEG     = EEGs(i);
+    EEG     = EEGs(i);   
+
     file_sec = split(EEG.filename,'_');
     SubID   = file_sec{1};
     task    = strcat('task-',strrep(strrep(strrep(EEGs(i).task,'_',''),'-',''),' ',''));
@@ -22,10 +23,15 @@ for i=1:length(EEGs)
     else
         desc    = 'desc-preproc';
     end
-    if(properties.general_params.meeg_data.segments)
-        filename = strcat(SubID,'_',task,'_',file_sec{end},'_',desc,'.set');
+    if(isfield(EEG,'segment'))
+        segment = strcat('seg_',EEG.segment);
     else
-        filename = strcat(SubID,'_',task,'_',desc,'.set');
+        segment = '';
+    end
+    if(properties.general_params.meeg_data.segments)
+        filename = strcat(SubID,'_',task,'_',file_sec{end},'_',desc,'_',segment,'.set');
+    else
+        filename = strcat(SubID,'_',task,'_',desc,'_',segment,'.set');
     end
     save(fullfile(subject_path,filename),'-struct','EEG','-mat','-v7.3');
 end

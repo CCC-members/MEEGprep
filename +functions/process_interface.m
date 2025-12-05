@@ -11,6 +11,9 @@ function [process_error] = process_interface(properties, reject_subjects)
 %%
 %% Preparing selected protocol
 %%
+import functions.*
+import functions.processes.*
+
 process_error           = [];
 general_params      = properties.general_params;
 
@@ -39,6 +42,47 @@ for i=1:length(subjects)
     disp('--------------------------------------------------------------------------');
     try
         EEGs = process_import_eeg(properties,subject);
+
+        %%
+        %% step 2: Import and edit channels
+        %%
+        disp('--------------------------------------------------------------------------');
+        disp("-->> Importing EEG channels");
+        disp('--------------------------------------------------------------------------');
+        EEGs = process_import_channels(properties,EEGs);
+
+        %%
+        %%  step 3: Import events
+        %%
+        disp('--------------------------------------------------------------------------');
+        disp("-->> Importing EEG events");
+        disp('--------------------------------------------------------------------------');
+        EEGs = process_import_events(properties, EEGs);
+
+        %%
+        %% step 3: cleaning data
+        %%
+        disp('--------------------------------------------------------------------------');
+        disp("-->> Correct continuous data using Artifact Subspace Reconstruction (ASR)");
+        disp('--------------------------------------------------------------------------');
+        EEGs = process_clean_data(properties, EEGs);
+
+        %%
+        %% step 4: Export and edit events
+        %%
+        disp('--------------------------------------------------------------------------');
+        disp("-->> Selecting data events");
+        disp('--------------------------------------------------------------------------');
+        EEGs = process_select_events(properties, EEGs);
+
+
+        %%
+        %% step 5:
+        %%
+        disp('--------------------------------------------------------------------------');
+        disp("-->> Exporting EEG processsed files");
+        disp('--------------------------------------------------------------------------');
+        EEGs = process_export(properties, EEGs);
     catch Ex
         disp('--------------------------------------------------------------------------');
         disp("-->> ERROR");
@@ -46,47 +90,6 @@ for i=1:length(subjects)
         disp('--------------------------------------------------------------------------');
         continue;
     end
-    %%
-    %% step 2: Import and edit channels
-    %%
-    disp('--------------------------------------------------------------------------');
-    disp("-->> Importing EEG channels");
-    disp('--------------------------------------------------------------------------');
-    EEGs = process_import_channels(properties,EEGs);
-
-    %%
-    %%  step 3: Import events
-    %%
-    disp('--------------------------------------------------------------------------');
-    disp("-->> Importing EEG events");
-    disp('--------------------------------------------------------------------------');
-    EEGs = process_import_events(properties, EEGs);
-
-    %%
-    %% step 3: cleaning data
-    %%
-    disp('--------------------------------------------------------------------------');
-    disp("-->> Correct continuous data using Artifact Subspace Reconstruction (ASR)");
-    disp('--------------------------------------------------------------------------');
-    EEGs = process_clean_data(properties, EEGs);
-
-    %%
-    %% step 4: Export and edit events
-    %%
-    disp('--------------------------------------------------------------------------');
-    disp("-->> Selecting data events");
-    disp('--------------------------------------------------------------------------');
-    EEGs = process_select_events(properties, EEGs);
-    
-
-    %%
-    %% step 5:
-    %%
-    disp('--------------------------------------------------------------------------');
-    disp("-->> Exporting EEG processsed files");
-    disp('--------------------------------------------------------------------------');
-    EEGs = process_export(properties, EEGs);
-
     disp('==========================================================================');
 end
 participants = jsondecode(fileread(fullfile(properties.general_params.workspace.base_path,'eeglab','Participants.json')));

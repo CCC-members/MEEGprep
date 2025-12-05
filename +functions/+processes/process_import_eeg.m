@@ -1,7 +1,7 @@
 function EEGs = process_import_eeg(properties,subject)
 
 % Getting params
-
+import tools.*
 modality    = properties.general_params.modality;
 subID       = subject.name;
 ref_file    = properties.general_params.meeg_data.reference_file;

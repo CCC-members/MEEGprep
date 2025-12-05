@@ -2,7 +2,7 @@
     "description":"Clean EEG channels with external Toolbox (Removing and interpolating channels)",
     "electrode_file":"standard_1020.elc",
     "band_cut":{
-        "run":true,
+        "run":false,
         "min_freq":0,
         "max_freq":50
     },
@@ -11,7 +11,7 @@
     },
     "downsample":{
         "run":false,
-        "srate":250
+        "srate":200
     },
     "cleanline":{
         "run":false,
